@@ -6,23 +6,26 @@ on:
       - main
 
 jobs:
-  checkout:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: action/setup-node@v4
+        with: 
+          node-version: 20
+          cache: pnpm
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with: 
+          version: 10
+
+      - name: Install deps
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
   
-  ssh:
-    runs-on: ubuntu-latest
-    steps:
-      - name: ssh to vm
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USERNAME }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          script: |
-            cd /home/chat/learn-github-actions
-            git pull
-            pnpm install
-            pm2 restart test

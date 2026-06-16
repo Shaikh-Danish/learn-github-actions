@@ -24,6 +24,5 @@ jobs:
           script: |
             cd /home/ubuntu/test
             git pull
-            npm install
-            npm run build
+            pnpm install
             pm2 restart test
